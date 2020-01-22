@@ -5,7 +5,7 @@ class UsersController < ApplicationController
   
   def create
     @user = User.new(user_params)
-    @blog.user_id = current_user.id #現在ログインしているuserのidを、blogのuser_idカラムに挿入する
+    @picture.user_id = current_user.id #現在ログインしているuserのidを、blogのuser_idカラムに挿入する
     if @user.save
         redirect_to user_path(@user.id)
       else

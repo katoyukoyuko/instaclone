@@ -8,4 +8,5 @@ class User < ApplicationRecord
   validates :password, presence: true, length: { minimum: 6 }
 
   has_many :pictures
+  has_many :favorites, dependent: :destroy
 end
