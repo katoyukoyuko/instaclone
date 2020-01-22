@@ -25,7 +25,7 @@ class PicturesController < ApplicationController
   # POST /pictures.json
   def create
     @picture = Picture.new(picture_params)
-    # @picture.user_id = current_user.id
+    @picture.user_id = current_user.id
     if params[:back]
       render :new
     else
@@ -67,7 +67,7 @@ class PicturesController < ApplicationController
 
   def confirm
     @picture = Picture.new(picture_params)
-    # @picture.user_id = current_user.id
+    @picture.user_id = current_user.id
   end
 
   private
