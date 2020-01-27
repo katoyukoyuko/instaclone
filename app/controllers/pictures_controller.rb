@@ -1,4 +1,5 @@
 class PicturesController < ApplicationController
+  # before_action :set_picture, only: [:show, :edit, :update, :destroy, :confirm]
   before_action :set_picture, only: [:show, :edit, :update, :destroy]
 
   # GET /pictures
@@ -15,11 +16,16 @@ class PicturesController < ApplicationController
 
   # GET /pictures/new
   def new
-    @picture = Picture.new
+    if params[:back]
+      @picture = Picture.new(picture_params)
+    else
+      @picture = Picture.new
+    end
   end
 
   # GET /pictures/1/edit
   def edit
+    @picture.image.cache!
   end
 
   # POST /pictures
@@ -67,9 +73,36 @@ class PicturesController < ApplicationController
   end
 
   def confirm
-    @picture = Picture.new(picture_params)
-    @picture.user_id = current_user.id
+    @picture = current_user.pictures.build(picture_params)
+    # @picture = current_user.pictures.new(picture_params)
+
+    # @picture = Picture.new(picture_params)
+    # @picture.user_id = current_user.id
   end
+  
+=begin
+・new
+formに画像を登録した段階でcarrierwaveの機能で、@pictureのインスタンスにcacheができる
+@picture.image_cache が入っているので、キャッシュが表示される 
+
+・edit
+[編集 - 確認]
+@pictureのインスタンスにcacheが登録されていないので、キャッシュが出ない
+@pictureのインスタンスにcacheを登録させたい
+- edit action
+cacheの登録は画像が保存されているインスタンスに対して、@picture.image.cache!で作成される
+- render :edit
+confirmのformに画像のキャッシュが表示される
+
+[確認 - 更新]
+confirmのform.hidden_fieldでimage_cacheをparameterに登録する
+paramterから受け取ったimage_cacheを@update(picture_paramsに渡す)
+confirmでupdateアクションで@pictureのインスタンスにcacheを入れて更新する
+cacheがない状態で、
+=end
+
+# [めも]Gem : アクティブストレージを使うときは confirm難しくなる https://railsguides.jp/active_storage_overview.html
+
 
   private
     # Use callbacks to share common setup or constraints between actions.
@@ -79,6 +112,6 @@ class PicturesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def picture_params
-      params.require(:picture).permit(:image,:image_cache,:content)
+      params.require(:picture).permit(:image, :content, :image_cache)
     end
 end

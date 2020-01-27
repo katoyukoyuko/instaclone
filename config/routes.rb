@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   resources :pictures do
     collection do
       post :confirm
+      patch :confirm
     end
   end
 
